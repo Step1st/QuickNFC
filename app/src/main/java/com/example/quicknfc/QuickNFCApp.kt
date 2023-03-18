@@ -11,27 +11,23 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.quicknfc.ui.QuickNFCNavGraph
 import com.example.quicknfc.ui.screen.Screen
-import com.example.quicknfc.ui.theme.QuickNFCTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuickNFCApp() {
-    QuickNFCTheme {
-        val navController = rememberNavController()
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            topBar = {
-                TopAppBar(
-                    title = { Text(text = "QuickNFC") }
-                )
-            },
-            bottomBar = { NavBar(navController = navController) }
-        ) { innerPadding ->
-            QuickNFCNavGraph(
-                navController = navController,
-                innerPadding = innerPadding
-            )
-        }
+    val navController = rememberNavController()
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "QuickNFC") }
+            )},
+        bottomBar = { NavBar(navController = navController) }
+    ) { innerPadding ->
+        QuickNFCNavGraph(
+            navController = navController,
+            innerPadding = innerPadding
+        )
     }
 }
 
