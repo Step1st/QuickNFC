@@ -1,4 +1,4 @@
-package com.example.quicknfc.ui
+package com.example.quicknfc
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
