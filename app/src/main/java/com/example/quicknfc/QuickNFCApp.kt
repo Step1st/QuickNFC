@@ -2,37 +2,48 @@ package com.example.quicknfc
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.quicknfc.ui.QuickNFCNavGraph
 import com.example.quicknfc.ui.screen.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QuickNFCApp() {
+fun QuickNFCApp(isNfcAvailable: () -> State<Boolean>) {
+    val snackbarHostState = remember { SnackbarHostState() }
     val navController = rememberNavController()
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = { Text(text = "QuickNFC") }
             )},
-        bottomBar = { NavBar(navController = navController) }
+        bottomBar = { BottomNavBar(navController = navController) },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
         QuickNFCNavGraph(
             navController = navController,
             innerPadding = innerPadding
-        )
+       )
+
+        if (!isNfcAvailable().value) {
+            LaunchedEffect(snackbarHostState) {
+                snackbarHostState.showSnackbar(
+                    message = "NFC is not available on this device",
+                    duration = SnackbarDuration.Long
+                )
+            }
+        }
+
     }
 }
 
 @Composable
-fun NavBar(navController: NavHostController) {
+fun BottomNavBar(navController: NavHostController) {
     val screens = listOf(
         Screen.Read,
         Screen.Write
@@ -48,6 +59,7 @@ fun NavBar(navController: NavHostController) {
                 label = { Text(screen.title) },
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                 onClick = {
+                    //TODO: Go over this code
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.startDestinationId) {
                             saveState = true
