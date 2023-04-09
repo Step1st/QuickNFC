@@ -12,7 +12,7 @@ import com.example.quicknfc.ui.screen.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QuickNFCApp(isNfcAvailable: () -> State<Boolean>) {
+fun QuickNFCApp(isNfcAvailable: State<Boolean>, onNfcSettingsClick: () -> Unit) {
     val snackbarHostState = remember { SnackbarHostState() }
     val navController = rememberNavController()
 
@@ -30,15 +30,24 @@ fun QuickNFCApp(isNfcAvailable: () -> State<Boolean>) {
             innerPadding = innerPadding
        )
 
-        if (!isNfcAvailable().value) {
-            LaunchedEffect(snackbarHostState) {
-                snackbarHostState.showSnackbar(
+        LaunchedEffect(isNfcAvailable, snackbarHostState) {
+            if (!isNfcAvailable.value) {
+                val result = snackbarHostState.showSnackbar(
                     message = "NFC is not available on this device",
-                    duration = SnackbarDuration.Long
+                    duration = SnackbarDuration.Indefinite,
+                    actionLabel = "Enable NFC",
+
                 )
+                when (result) {
+                    SnackbarResult.ActionPerformed -> {
+                        onNfcSettingsClick()
+                    }
+                    SnackbarResult.Dismissed -> {
+
+                    }
+                }
             }
         }
-
     }
 }
 

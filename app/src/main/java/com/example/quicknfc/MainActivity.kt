@@ -35,7 +35,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             QuickNFCTheme(dynamicColor = false) {
                 QuickNFCApp(
-                    isNfcAvailable = { viewModel.getIsNFCAvailable() }
+                    isNfcAvailable = viewModel.getIsNFCAvailable(),
+                    onNfcSettingsClick = { startActivity(Intent(Settings.ACTION_NFC_SETTINGS)) }
                 )
             }
         }
@@ -126,6 +127,9 @@ class MainActivity : ComponentActivity() {
             viewModel.setIsNFCAvailable(true)
             nfcAdapter.enableForegroundDispatch(this, nfcPendingIntent, intentFilters, techLists)
         }
+        else {
+            viewModel.setIsNFCAvailable(false)
+        }
     }
 
 }
@@ -135,7 +139,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     QuickNFCTheme() {
-        QuickNFCApp(isNfcAvailable = { mutableStateOf(true) })
+        QuickNFCApp(isNfcAvailable = remember{ mutableStateOf(true) }, onNfcSettingsClick = { })
     }
 }
 
@@ -143,6 +147,6 @@ fun DefaultPreview() {
 @Composable
 fun DefaultPreviewDark() {
     QuickNFCTheme(darkTheme = true) {
-        QuickNFCApp(isNfcAvailable = { mutableStateOf(true) })
+        QuickNFCApp(isNfcAvailable = remember{ mutableStateOf(true) }, onNfcSettingsClick = { })
     }
 }
