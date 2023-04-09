@@ -64,7 +64,7 @@ fun BottomNavBar(navController: NavHostController) {
     BottomAppBar {
         screens.forEach { screen ->
             NavigationBarItem(
-                icon = { Icon(screen.icon, contentDescription = null) },
+                icon = { Icon(screen.icon!!, contentDescription = null) },
                 label = { Text(screen.title) },
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                 onClick = {
