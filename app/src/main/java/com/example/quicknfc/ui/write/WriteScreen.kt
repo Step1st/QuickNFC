@@ -1,4 +1,4 @@
-package com.example.quicknfc.ui.screen.write
+package com.example.quicknfc.ui.write
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.quicknfc.ui.components.WriteItem
-import com.example.quicknfc.ui.screen.Screen
+import com.example.quicknfc.ui.write.components.WriteItem
+import com.example.quicknfc.ui.Screen
 
 @Composable
 fun WriteScreen(navController: NavController) {

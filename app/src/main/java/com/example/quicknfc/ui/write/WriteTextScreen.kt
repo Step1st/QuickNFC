@@ -1,4 +1,4 @@
-package com.example.quicknfc.ui.screen.write
+package com.example.quicknfc.ui.write
 
 import android.util.Log
 import androidx.compose.foundation.layout.*

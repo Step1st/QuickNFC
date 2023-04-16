@@ -8,7 +8,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.quicknfc.ui.screen.Screen
+import com.example.quicknfc.ui.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

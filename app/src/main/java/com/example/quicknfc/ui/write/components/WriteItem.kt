@@ -1,4 +1,4 @@
-package com.example.quicknfc.ui.components
+package com.example.quicknfc.ui.write.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 
-@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WriteItem(name: String, icon: ImageVector, onClick: () -> Unit) {
     ListItem(
