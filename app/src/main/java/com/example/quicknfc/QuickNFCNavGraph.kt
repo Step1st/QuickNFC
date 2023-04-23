@@ -15,6 +15,7 @@ import com.example.quicknfc.ui.write.WriteTextScreen
 
 @Composable
 fun QuickNFCNavGraph(
+    viewModel: QuickNFCViewModel,
     navController: NavHostController,
     startDestination: String = Screen.Read.route,
     innerPadding: PaddingValues = PaddingValues()
@@ -25,7 +26,7 @@ fun QuickNFCNavGraph(
         modifier = Modifier.padding(innerPadding)
     ) {
         composable(Screen.Read.route) {
-            ReadScreen()
+            ReadScreen(viewModel)
         }
         composable(Screen.Write.route) {
             WriteScreen(navController)

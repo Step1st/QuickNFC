@@ -10,8 +10,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.quicknfc.ui.theme.QuickNFCTheme
 
@@ -27,7 +25,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             QuickNFCTheme(dynamicColor = false) {
                 QuickNFCApp(
-                    isNfcAvailable = viewModel.getIsNFCAvailable(),
+                    viewModel = viewModel,
                     onNfcSettingsClick = { startActivity(Intent(Settings.ACTION_NFC_SETTINGS)) }
                 )
             }
@@ -55,11 +53,11 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         if (nfcAdapter.isEnabled) {
-            viewModel.setIsNFCAvailable(true)
-            nfcAdapter.enableReaderMode(this, viewModel.getTagController(), NfcAdapter.FLAG_READER_NFC_A or NfcAdapter.FLAG_READER_NFC_B , null)
+            viewModel.isNFCAvailable.value = true
+            nfcAdapter.enableReaderMode(this, viewModel::onTagDiscovered, NfcAdapter.FLAG_READER_NFC_A or NfcAdapter.FLAG_READER_NFC_B , null)
         }
         else {
-            viewModel.setIsNFCAvailable(false)
+            viewModel.isNFCAvailable.value = false
         }
     }
 }
@@ -69,7 +67,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     QuickNFCTheme() {
-        QuickNFCApp(isNfcAvailable = remember{ mutableStateOf(true) }, onNfcSettingsClick = { })
+        QuickNFCApp(viewModel = QuickNFCViewModel(), onNfcSettingsClick = { })
     }
 }
 
@@ -77,6 +75,6 @@ fun DefaultPreview() {
 @Composable
 fun DefaultPreviewDark() {
     QuickNFCTheme(darkTheme = true) {
-        QuickNFCApp(isNfcAvailable = remember{ mutableStateOf(true) }, onNfcSettingsClick = { })
+        QuickNFCApp(viewModel = QuickNFCViewModel(), onNfcSettingsClick = { })
     }
 }
