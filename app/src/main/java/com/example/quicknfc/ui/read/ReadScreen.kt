@@ -14,17 +14,9 @@ import com.example.quicknfc.ui.read.components.*
 @Composable
 fun ReadScreen(viewModel: QuickNFCViewModel) {
 
-    val techAvailable by viewModel.techAvailable.collectAsState()
-    val canMakeReadOnly by viewModel.canMakeReadOnly.collectAsState()
-    val isWritable by viewModel.isWritable.collectAsState()
-    val type by viewModel.ndefType.collectAsState()
-    val memorySize by viewModel.memorySize.collectAsState()
-    val sak by viewModel.sak.collectAsState()
-    val atqa by viewModel.atqa.collectAsState()
+    val tagMetadata by viewModel.tagMetadata.collectAsState()
 
-
-
-    if (techAvailable.isEmpty()) {
+    if (tagMetadata.techAvailable.isEmpty()) {
         Column(
             modifier = Modifier
                 .fillMaxSize(),
@@ -38,13 +30,13 @@ fun ReadScreen(viewModel: QuickNFCViewModel) {
             modifier = Modifier
                 .fillMaxSize(),
         ) {
-            TechAvailable(techAvailable = techAvailable.asIterable())
-            type?.let { DataFormat(type = it) }
-            memorySize?.let { MemorySize(memorySize = it) }
-            canMakeReadOnly?.let { CanMakeReadOnly(canMakeReadOnly = it) }
-            isWritable?.let { IsWritable(isWritable = it) }
-            sak?.let { Sak(sak = it) }
-            atqa?.let { Atqa(atqa = it) }
+            TechAvailable(techAvailable = tagMetadata.techAvailable.asIterable())
+            tagMetadata.ndefType?.let { DataFormat(type = it) }
+            tagMetadata.memorySize?.let { MemorySize(memorySize = it) }
+            tagMetadata.canMakeReadOnly?.let { CanMakeReadOnly(canMakeReadOnly = it) }
+            tagMetadata.isWritable?.let { IsWritable(isWritable = it) }
+            tagMetadata.sak?.let { Sak(sak = it) }
+            tagMetadata.atqa?.let { Atqa(atqa = it) }
         }
     }
 }

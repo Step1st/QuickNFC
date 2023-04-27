@@ -33,7 +33,7 @@ fun QuickNFCNavGraph(
         }
 
         composable(Screen.WriteText.route) {
-            WriteTextScreen()
+            WriteTextScreen(viewModel)
         }
         composable(Screen.WriteLink.route) {
             WriteLinkScreen()

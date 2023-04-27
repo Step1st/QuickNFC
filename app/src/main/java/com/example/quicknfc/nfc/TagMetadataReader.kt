@@ -3,12 +3,12 @@ package com.example.quicknfc.nfc
 
 import android.nfc.Tag
 import android.nfc.tech.MifareClassic
+import android.nfc.tech.Ndef
 import android.nfc.tech.NfcA
 import android.util.Log
 
 
-class TagController {
-
+class TagMetadataReader {
     fun getSak(tag: Tag): String? {
         if (tag.techList.contains("android.nfc.tech.NfcA")) {
             val nfcA = NfcA.get(tag)
@@ -29,8 +29,6 @@ class TagController {
 
     fun getTagMemorySize(tag: Tag): Int? {
         val techList = tag.techList
-
-
         return when {
             techList.contains("android.nfc.tech.MifareClassic") -> {
                 val mifareClassic = MifareClassic.get(tag)
@@ -58,7 +56,48 @@ class TagController {
                     null
                 }
             }
-            else -> 57
+            else -> null
         }
     }
+
+    fun getIsWritable(tag: Tag): Boolean? {
+        if (tag.techList.contains("android.nfc.tech.Ndef")) {
+            val ndef = Ndef.get(tag)
+            return ndef.isWritable
+        }
+        return null
+    }
+
+    fun getCanMakeReadOnly(tag: Tag): Boolean? {
+        if (tag.techList.contains("android.nfc.tech.Ndef")) {
+            val ndef = Ndef.get(tag)
+            return ndef.canMakeReadOnly()
+        }
+        return null
+    }
+
+    fun getNdefTagType(tag: Tag): String? {
+        if (tag.techList.contains("android.nfc.tech.Ndef")) {
+            val ndef = Ndef.get(tag)
+            return when (ndef.type) {
+                Ndef.NFC_FORUM_TYPE_1 -> "NFC Forum Type 1"
+                Ndef.NFC_FORUM_TYPE_2 -> "NFC Forum Type 2"
+                Ndef.NFC_FORUM_TYPE_3 -> "NFC Forum Type 3"
+                Ndef.NFC_FORUM_TYPE_4 -> "NFC Forum Type 4"
+                Ndef.MIFARE_CLASSIC -> "Mifare Classic"
+                else -> ""
+            }
+        }
+        return null
+    }
+
+    fun getTechAvailable(tag: Tag): Array<String> {
+        return separateName(tag.techList)
+    }
+
+    private fun separateName(list: Array<String>): Array<String> {
+        return list.map { it.split(".").last() }.toTypedArray()
+    }
+
+
 }

@@ -9,16 +9,21 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.example.quicknfc.QuickNFCViewModel
+import com.example.quicknfc.ui.write.components.WriteDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WriteTextScreen() {
+fun WriteTextScreen(viewModel: QuickNFCViewModel) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
     ) {
+
         val (textField, button) = createRefs()
         var textFieldState by remember { mutableStateOf(TextFieldValue("")) }
+        val status by viewModel.status.collectAsState()
+
         OutlinedTextField(
             modifier = Modifier
                 .constrainAs(textField) {
@@ -42,16 +47,22 @@ fun WriteTextScreen() {
                     bottom.linkTo(parent.bottom, 16.dp)
                 },
             onClick = {
+                viewModel.writeText(textFieldState.text)
                 Log.d("WriteTextScreen", "Write text: $textFieldState")
             },
         ) {
             Text(text = "Write", style = MaterialTheme.typography.titleMedium)
         }
+
+        if(status == QuickNFCViewModel.Status.Writing) {
+            WriteDialog { viewModel.cancelWrite() }
+        }
+
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun WriteTextScreenPreview() {
-    WriteTextScreen()
+    WriteTextScreen(QuickNFCViewModel())
 }
