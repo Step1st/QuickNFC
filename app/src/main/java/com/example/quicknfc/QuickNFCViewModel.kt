@@ -1,5 +1,7 @@
 package com.example.quicknfc
 
+import android.nfc.NdefMessage
+import android.nfc.NdefRecord
 import android.nfc.Tag
 import androidx.lifecycle.ViewModel
 import com.example.quicknfc.nfc.NfcMode
@@ -22,19 +24,20 @@ class QuickNFCViewModel(
         Error
     }
 
+    var NdefMessage: NdefMessage? = null
+
     var isNFCAvailable = MutableStateFlow(false)
 
     private var _status = MutableStateFlow(Status.Reading)
     val status = _status.asStateFlow()
 
-    private var _mode = MutableStateFlow(NfcMode.Read)
-    val mode = _mode.asStateFlow()
+    private var mode = NfcMode.Read
 
-    private var _tagMetadata = MutableStateFlow(TagMetadata(arrayOf<String>(), null, null, null, null, null, null))
+    private var _tagMetadata = MutableStateFlow(TagMetadata(arrayOf(), null, null, null, null, null, null))
     val tagMetadata = _tagMetadata.asStateFlow()
 
     private fun readTag(tag: Tag) {
-        val newTagMetadata = TagMetadata(arrayOf<String>(), null, null, null, null, null, null)
+        val newTagMetadata = TagMetadata(arrayOf(), null, null, null, null, null, null)
 
         newTagMetadata.techAvailable = tagMetadataReader.getTechAvailable(tag)
         newTagMetadata.memorySize = tagMetadataReader.getTagMemorySize(tag)
@@ -47,30 +50,48 @@ class QuickNFCViewModel(
         _tagMetadata.value = newTagMetadata
     }
 
+    private fun writeToTag(tag: Tag) {
+        if (tagWriter.writeToTag(tag, NdefMessage!!)) {
+            _status.value = Status.Reading
+        }
+        else {
+            _status.value = Status.Error
+        }
+        mode = NfcMode.Read
+    }
+
+    fun writeText(text: String) {
+        NdefRecord.createTextRecord(null, text).let {
+            NdefMessage = NdefMessage(it)
+        }
+        _status.value = Status.Writing
+        mode = NfcMode.Write
+    }
+
+    fun writeUri(uri: String) {
+        NdefRecord.createUri(uri).let {
+            NdefMessage = NdefMessage(it)
+        }
+        _status.value = Status.Writing
+        mode = NfcMode.Write
+    }
+
+    fun cancelWrite() {
+        mode = NfcMode.Read
+        _status.value = Status.Reading
+    }
+
     fun onTagDiscovered(tag: Tag) {
-        when (_mode.value) {
+        when (mode) {
             NfcMode.Read -> {
                 readTag(tag)
             }
             NfcMode.Write -> {
-
-                _mode.value = NfcMode.Read
+                writeToTag(tag)
             }
             NfcMode.Copy -> {
-
-                _mode.value = NfcMode.Read
+                mode = NfcMode.Read
             }
         }
     }
-
-    fun writeText(text: String) {
-        _status.value = Status.Writing
-        _mode.value = NfcMode.Write
-    }
-
-    fun cancelWrite() {
-        _status.value = Status.Reading
-        _mode.value = NfcMode.Read
-    }
-
 }

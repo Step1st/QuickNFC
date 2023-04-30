@@ -1,6 +1,5 @@
 package com.example.quicknfc.ui.write
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -9,20 +8,24 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.example.quicknfc.QuickNFCViewModel
+import com.example.quicknfc.ui.write.components.ErrorDialog
+import com.example.quicknfc.ui.write.components.WriteDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WriteLinkScreen() {
+fun WriteLinkScreen(viewModel: QuickNFCViewModel) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
     ) {
         val (textFields, button) = createRefs()
+        var expanded by remember { mutableStateOf(false) }
+        val status by viewModel.status.collectAsState()
 
         val protocolList = listOf("https://", "http://", "ftp://")
         var link by remember { mutableStateOf(TextFieldValue("")) }
         var protocol by remember { mutableStateOf(TextFieldValue(protocolList[0])) }
-        var expanded by remember { mutableStateOf(false) }
         
         Row(
             modifier = Modifier
@@ -79,16 +82,27 @@ fun WriteLinkScreen() {
                     bottom.linkTo(parent.bottom, 16.dp)
                 },
             onClick = {
-                Log.d("WriteTextScreen", "Write text: $link")
+                viewModel.writeUri(protocol.text + link.text)
             },
         ) {
             Text(text = "Write", style = MaterialTheme.typography.titleMedium)
         }
+
+        when (status) {
+            QuickNFCViewModel.Status.Writing -> {
+                WriteDialog { viewModel.cancelWrite() }
+            }
+            QuickNFCViewModel.Status.Error -> {
+                ErrorDialog { viewModel.cancelWrite() }
+            }
+            else -> {}
+        }
+
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun WriteLinkScreenPreview() {
-    WriteLinkScreen()
+    WriteLinkScreen(QuickNFCViewModel())
 }

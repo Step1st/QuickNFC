@@ -1,6 +1,5 @@
 package com.example.quicknfc.ui.write
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -10,6 +9,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.quicknfc.QuickNFCViewModel
+import com.example.quicknfc.ui.write.components.ErrorDialog
 import com.example.quicknfc.ui.write.components.WriteDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,16 +48,20 @@ fun WriteTextScreen(viewModel: QuickNFCViewModel) {
                 },
             onClick = {
                 viewModel.writeText(textFieldState.text)
-                Log.d("WriteTextScreen", "Write text: $textFieldState")
             },
         ) {
             Text(text = "Write", style = MaterialTheme.typography.titleMedium)
         }
 
-        if(status == QuickNFCViewModel.Status.Writing) {
-            WriteDialog { viewModel.cancelWrite() }
+        when (status) {
+            QuickNFCViewModel.Status.Writing -> {
+                WriteDialog { viewModel.cancelWrite() }
+            }
+            QuickNFCViewModel.Status.Error -> {
+                ErrorDialog { viewModel.cancelWrite() }
+            }
+            else -> {}
         }
-
     }
 }
 
