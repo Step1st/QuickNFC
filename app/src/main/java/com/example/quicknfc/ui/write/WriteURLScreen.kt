@@ -9,12 +9,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.quicknfc.QuickNFCViewModel
+import com.example.quicknfc.ui.theme.QuickNFCTheme
 import com.example.quicknfc.ui.write.components.ErrorDialog
 import com.example.quicknfc.ui.write.components.WriteDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WriteLinkScreen(viewModel: QuickNFCViewModel) {
+fun WriteURLScreen(viewModel: QuickNFCViewModel) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -48,7 +49,7 @@ fun WriteLinkScreen(viewModel: QuickNFCViewModel) {
                         .menuAnchor(),
                     value = protocol,
                     onValueChange = { protocol = it },
-                    label = { Text(text = "Link") },
+                    label = { Text(text = "Protocol") },
                     readOnly = true
                 )
                 ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
@@ -69,7 +70,7 @@ fun WriteLinkScreen(viewModel: QuickNFCViewModel) {
                 onValueChange = {
                     link = it
                 },
-                label = { Text (text = "Plain Text") },
+                label = { Text (text = "Domain") },
             )
         }
 
@@ -104,5 +105,9 @@ fun WriteLinkScreen(viewModel: QuickNFCViewModel) {
 @Preview(showBackground = true)
 @Composable
 fun WriteLinkScreenPreview() {
-    WriteLinkScreen(QuickNFCViewModel())
+    QuickNFCTheme(darkTheme = true) {
+        Surface() {
+            WriteURLScreen(QuickNFCViewModel())
+        }
+    }
 }

@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            QuickNFCTheme(dynamicColor = false) {
+            QuickNFCTheme(dynamicColor = true) {
                 QuickNFCApp(
                     viewModel = viewModel,
                     onNfcSettingsClick = { startActivity(Intent(Settings.ACTION_NFC_SETTINGS)) }

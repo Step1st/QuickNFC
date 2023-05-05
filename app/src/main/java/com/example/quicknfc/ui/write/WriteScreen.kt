@@ -3,6 +3,7 @@ package com.example.quicknfc.ui.write
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.TextFields
 import androidx.compose.runtime.Composable
@@ -25,7 +26,10 @@ fun WriteScreen(navController: NavController) {
             navController.navigate(Screen.WriteText.route)
         }
         WriteItem("Write Link", Icons.Outlined.Link) {
-            navController.navigate(Screen.WriteLink.route)
+            navController.navigate(Screen.WriteURL.route)
+        }
+        WriteItem(name = "Write application", icon = Icons.Outlined.Archive) {
+            navController.navigate(Screen.WriteApp.route)
         }
     }
 }

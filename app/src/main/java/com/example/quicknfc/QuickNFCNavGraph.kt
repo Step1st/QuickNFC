@@ -9,7 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.quicknfc.ui.Screen
 import com.example.quicknfc.ui.screen.ReadScreen
-import com.example.quicknfc.ui.write.WriteLinkScreen
+import com.example.quicknfc.ui.write.WriteURLScreen
 import com.example.quicknfc.ui.write.WriteScreen
 import com.example.quicknfc.ui.write.WriteTextScreen
 
@@ -35,8 +35,8 @@ fun QuickNFCNavGraph(
         composable(Screen.WriteText.route) {
             WriteTextScreen(viewModel)
         }
-        composable(Screen.WriteLink.route) {
-            WriteLinkScreen(viewModel)
+        composable(Screen.WriteURL.route) {
+            WriteURLScreen(viewModel)
         }
 
     }
