@@ -8,11 +8,11 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.quicknfc.ui.screen.Screen
+import com.example.quicknfc.ui.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QuickNFCApp(isNfcAvailable: () -> State<Boolean>) {
+fun QuickNFCApp(viewModel: QuickNFCViewModel, onNfcSettingsClick: () -> Unit) {
     val snackbarHostState = remember { SnackbarHostState() }
     val navController = rememberNavController()
 
@@ -26,19 +26,31 @@ fun QuickNFCApp(isNfcAvailable: () -> State<Boolean>) {
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
         QuickNFCNavGraph(
+            viewModel = viewModel,
             navController = navController,
             innerPadding = innerPadding
        )
 
-        if (!isNfcAvailable().value) {
-            LaunchedEffect(snackbarHostState) {
-                snackbarHostState.showSnackbar(
+        val isNfcAvailable by viewModel.isNFCAvailable.collectAsState()
+
+        LaunchedEffect(isNfcAvailable, snackbarHostState) {
+            if (!isNfcAvailable) {
+                val result = snackbarHostState.showSnackbar(
                     message = "NFC is not available on this device",
-                    duration = SnackbarDuration.Long
+                    duration = SnackbarDuration.Indefinite,
+                    actionLabel = "Enable NFC",
+
                 )
+                when (result) {
+                    SnackbarResult.ActionPerformed -> {
+                        onNfcSettingsClick()
+                    }
+                    SnackbarResult.Dismissed -> {
+
+                    }
+                }
             }
         }
-
     }
 }
 
@@ -55,7 +67,7 @@ fun BottomNavBar(navController: NavHostController) {
     BottomAppBar {
         screens.forEach { screen ->
             NavigationBarItem(
-                icon = { Icon(screen.icon, contentDescription = null) },
+                icon = { Icon(screen.icon!!, contentDescription = null) },
                 label = { Text(screen.title) },
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                 onClick = {

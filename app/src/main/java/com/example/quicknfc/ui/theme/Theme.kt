@@ -37,6 +37,18 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+private val DarkColorScheme2 = darkColorScheme(
+    primary = Blue80,
+    secondary = BlueGrey80,
+    tertiary = Green80
+)
+
+private val LightColorScheme2 = lightColorScheme(
+    primary = Blue40,
+    secondary = BlueGrey40,
+    tertiary = Green40
+)
+
 @Composable
 fun QuickNFCTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -49,8 +61,8 @@ fun QuickNFCTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        darkTheme -> DarkColorScheme2
+        else -> LightColorScheme2
     }
     val view = LocalView.current
     if (!view.isInEditMode) {
